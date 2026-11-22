@@ -6,7 +6,7 @@ import pandas as pd
 from app.converters.csv_to_xes_converter import CsvToXesConverter
 
 
-class TestMissingValues(unittest.TestCase):
+class TestCsvToXesMissingValues(unittest.TestCase):
 
     def setUp(self):
         # Two correct events from an online shop
@@ -36,7 +36,7 @@ class TestMissingValues(unittest.TestCase):
         self.assertEqual(removed, 1)
         self.assertEqual(summary["Events"], 1)
         self.assertEqual(summary["Cases"], 1)
-        self.assertNotIn('value="nan"', ET.tostring(tree.getroot(), encoding="unicode"))
+        self.assertNotIn('value="None"', ET.tostring(tree.getroot(), encoding="unicode"))
 
     def test_missing_activity(self):
         df = self.df.copy()
@@ -47,7 +47,7 @@ class TestMissingValues(unittest.TestCase):
         self.assertEqual(removed, 1)
         self.assertEqual(summary["Events"], 1)
         self.assertEqual(summary["Activities"], 1)
-        self.assertNotIn('value="nan"', ET.tostring(tree.getroot(), encoding="unicode"))
+        self.assertNotIn('value="None"', ET.tostring(tree.getroot(), encoding="unicode"))
 
     def test_missing_timestamp(self):
         df = self.df.copy()

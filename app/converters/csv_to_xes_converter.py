@@ -36,7 +36,12 @@ class CsvToXesConverter:
         -------
         tuple[ET.ElementTree, dict[str, int], int]
             A tuple containing the converted XES XML tree, a summary of the converted data
-            and number of rows removed because of missing values in the requeired XES columns.
+            and number of rows removed because of missing values in the required XES columns.
+
+        Raises
+        ------
+        ValueError
+            If no valid data remains after removing rows with missing values.
         """
 
         self._validate_input(df, case_id_col, activity_col, timestamp_col)
@@ -58,7 +63,7 @@ class CsvToXesConverter:
             raise ValueError(
                 "No valid data remaining after processing. Please check your data for missing values."
             )
-        # convert only afte removing rows
+        # convert only after removing rows
         df[self.xes_case_col] = df[self.xes_case_col].astype(str)
         df[self.xes_activity_col] = df[self.xes_activity_col].astype(str)
 
