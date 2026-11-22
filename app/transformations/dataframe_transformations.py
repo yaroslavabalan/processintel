@@ -58,8 +58,25 @@ class DataframeTransformations:
             ]
             raise InvalidColumnNameException(not_found_columns)
 
-        # Sort by timestamp
-        sorted_dataframe = self.dataframe.sort_values(by=[time_label])
+        # Convert timestamps to datetime and sort events
+        sorted_dataframe = self.dataframe.copy()
+
+        timestamps = sorted_dataframe[time_label].replace(
+            r"^(\d{1,2}-\d{1,2}-\d{4}):(\d{1,2})\.(\d{1,2})$",
+            r"\1 \2:\3",
+            regex=True,
+        )
+
+        sorted_dataframe[time_label] = pd.to_datetime(
+            timestamps,
+            format="mixed",
+            dayfirst=True,
+            errors="raise",
+        )
+
+        sorted_dataframe = sorted_dataframe.sort_values(
+            by=time_label, kind="stable"
+        )
 
         result = (
             sorted_dataframe.groupby(case_label)[event_label]
